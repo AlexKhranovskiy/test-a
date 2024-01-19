@@ -25,7 +25,8 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'photo'
+        'photo',
+        'position_id'
     ];
 
     /**
@@ -47,7 +48,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function position(): BelongsTo
+    public function position(): belongsTo
     {
         return $this->belongsTo(Position::class);
     }
