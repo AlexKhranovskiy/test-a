@@ -27,8 +27,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'email' => 'required|string',
+            'name' => 'required|string|min:2|max:60',
+            'email' => 'required|string|min:2|max:100|email:rfc',
             'phone' => 'required|string|', //string - pattern: ^[\+]{0,1}380([0-9]{9})$)
             'position_id' => 'required|integer|min:1',
             'photo' => 'required|file'

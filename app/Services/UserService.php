@@ -21,9 +21,10 @@ class UserService
     {
         $this->user = $user;
     }
+
     public function getAllWithPagination(?int $count): JsonResponse
     {
-        if(is_null($count)){
+        if (is_null($count)) {
             $count = env('DEFAULT_PAGINATION_VALUE', 6);
         }
 
@@ -62,18 +63,22 @@ class UserService
             return $this->responseWithError('Error file uploading. File have not been saved', 500);
         }
 
-        $newUser = $this->user->create([
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'position_id' => $positionId,
-            'photo' => $fileName
-        ]);
+        $user = User::where('phone', $phone)->orWhere('email', $email)->first();
+        if (!is_null($user)) {
+            return $this->responseWithError('User with this phone or email already exist', 409);
+        } else {
+            $newUser = $this->user->create([
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'position_id' => $positionId,
+                'photo' => $fileName
+            ]);
 
-        return $this->responseWithSuccess([
-            'user_id' => $newUser->id,
-            'message' => 'New user successfully registered'
-        ]);
+            return $this->responseWithSuccess([
+                'user_id' => $newUser->id,
+                'message' => 'New user successfully registered'
+            ]);
+        }
     }
-
 }
