@@ -27,16 +27,8 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'integer',
-            'count' => 'sometimes|integer'
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'page' => 'Invalid page format',
-            'count' => 'Invalid count format',
+            'page' => 'integer|min:1',
+            'count' => 'integer|min:1'
         ];
     }
 
