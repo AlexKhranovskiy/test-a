@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\AuthenticatorUser;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -14,18 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        AuthenticatorUser::factory(1)->create();
         $users = User::factory(45)->create();
         $positions = Position::factory(5)->create();
 
 
         $users->each(function (User $user) use ($positions) {
-            //$positions->random()->update(['user_id' => $user->id]);
-//            $positions->save();
             $user->position()->associate($positions->random());
             $user->save();
-//            $positions->each(function (Position $position) use ($user) {
-//
-//            });
         });
     }
 }

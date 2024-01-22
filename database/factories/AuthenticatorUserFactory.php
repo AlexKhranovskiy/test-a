@@ -4,11 +4,12 @@ namespace Database\Factories;
 
 use App\Models\Position;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends Factory<Position>
  */
-class PositionFactory extends Factory
+class AuthenticatorUserFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +19,8 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            'position' => fake()->jobTitle
+            'name' => 'abzagency',
+            'password' => Hash::make(env('AUTHENTICATOR_USER_PASSWORD','qwerty')),
         ];
     }
 }
