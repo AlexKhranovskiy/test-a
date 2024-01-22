@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('/v1/users', [AuthController::class, 'getAll']);
-Route::post('/v1/users', [AuthController::class, 'addUser']);
+Route::get('/v1/users', [UserController::class, 'getAll']);
+Route::post('/v1/users', [UserController::class, 'register']);
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
 //    Route::prefix('v1')->group(
