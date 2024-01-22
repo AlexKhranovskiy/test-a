@@ -8,6 +8,9 @@ use App\Models\AuthenticatorUser;
 use App\Models\User;
 use App\Traits\JwtTrait;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class AuthController extends Controller
 {
@@ -33,7 +36,7 @@ class AuthController extends Controller
         $result = [];
         $paginatedUsers = $user->paginate($count);
 
-        if($paginatedUsers->currentPage() > $paginatedUsers->lastPage()){
+        if ($paginatedUsers->currentPage() > $paginatedUsers->lastPage()) {
             return $this->responseWithError('Page not found', 404);
         }
 
@@ -54,6 +57,34 @@ class AuthController extends Controller
                 'prev_url' => $paginatedUsers->previousPageUrl()
             ],
             'users' => $result,
+        ]);
+    }
+
+    public function addUser(Request $request, User $user)
+    {
+        $name = $request->name;
+        $email = $request->email;
+        $phone = $request->phone;
+        $positionId = $request->position_id;
+        $photo = $request->file('photo');
+
+        $fileName = Storage::disk('public_uploads')->put('images/users', $photo);
+
+        if (!$fileName) {
+            return $this->responseWithError('Error file uploading. File have not been saved', 500);
+        }
+
+        $user->create([
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'position_id' => $positionId,
+            'photo' => $fileName
+        ]);
+
+        return $this->responseWithSuccess([
+            'message' => 'User added',
+            'file name' => $fileName
         ]);
     }
 }

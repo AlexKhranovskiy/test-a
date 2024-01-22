@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/v1/users', [AuthController::class, 'getAll']);
+Route::post('/v1/users', [AuthController::class, 'addUser']);
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
 //    Route::prefix('v1')->group(
