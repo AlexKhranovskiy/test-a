@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+Route::get('/v1/users', [AuthController::class, 'getAll']);
 
-Route::get('/token', [AuthController::class, 'getToken']);
-Route::get('/users', [AuthController::class, 'getAll']); //->middleware('auth.jwt');
+//Route::group(['middleware' => ['auth.jwt']], function () {
+//    Route::prefix('v1')->group(
+//        function () {
+//            Route::get('/token', [AuthController::class, 'getToken']);
+//            Route::get('/users', [AuthController::class, 'getAll']);
+//        });
+//});

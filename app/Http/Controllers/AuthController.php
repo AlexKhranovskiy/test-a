@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\PartnerPaymentsJsonResource;
 use App\Http\Resources\UsersJsonResource;
 use App\Models\AuthenticatorUser;
@@ -28,9 +29,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function getAll(User $user, Request $request)
+    public function getAll(User $user, UserRequest $request)
     {
-        $count = $request->count ?? 6;
+        $count = $request->count;// ?? 6;
         $result = [];
         $paginatedUsers = $user->paginate($count);
         $paginatedUsers->setPageName('page');
