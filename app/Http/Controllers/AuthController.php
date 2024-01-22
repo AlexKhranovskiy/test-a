@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\PartnerPaymentsJsonResource;
 use App\Http\Resources\UsersJsonResource;
 use App\Models\AuthenticatorUser;
-use App\Models\PartnerAccountAuthenticatable;
 use App\Models\User;
 use App\Traits\JwtTrait;
-use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Traits\ResponseTrait;
 
 class AuthController extends Controller
 {
-    use JwtTrait;
+    use JwtTrait, ResponseTrait;
 
     public function getToken()
     {
@@ -31,9 +28,15 @@ class AuthController extends Controller
 
     public function getAll(User $user, UserRequest $request)
     {
-        $count = $request->count ?? 6;
+        $count = $request->count ?? env('DEFAULT_PAGINATION_VALUE', 6);
+
         $result = [];
         $paginatedUsers = $user->paginate($count);
+
+        if($paginatedUsers->currentPage() > $paginatedUsers->lastPage()){
+            return $this->responseWithError('Page not found', 404);
+        }
+
         $paginatedUsers->setPageName('page');
         $paginatedUsers->appends('count', $count);
 
@@ -41,8 +44,7 @@ class AuthController extends Controller
             $result[] = new UsersJsonResource($paginatedUser);
         }
 
-        return response()->json([
-            'success' => true,
+        return $this->responseWithSuccess([
             'page' => $paginatedUsers->currentPage(),
             'total_pages' => $paginatedUsers->lastPage(),
             'total_users' => $paginatedUsers->total(),
