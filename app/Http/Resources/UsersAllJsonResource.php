@@ -19,10 +19,10 @@ class UsersAllJsonResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'position' => $this->position->position,
+            'position' => $this->position->name,
             'position_id' => $this->position->id,
             'registration_timestamp' => $this->registration_timestamp,
-            'photo' => $this->photo,
+            'photo' => asset($this->photo),
         ];
     }
 }

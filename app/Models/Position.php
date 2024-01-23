@@ -12,6 +12,6 @@ class Position extends Model
     use HasFactory;
 
     protected $fillable = [
-        'position',
+        'name',
     ];
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/v1/token', [AuthController::class, 'getToken']);
 Route::get('/v1/users', [UserController::class, 'getAll']); //->middleware('auth.jwt');
 Route::post('/v1/users', [UserController::class, 'register']);
-Route::get('/v1/users/{id}', [UserController::class, 'getById']); //->whereNumber('id');
+Route::get('/v1/users/{id}', [UserController::class, 'getById']);
+Route::get('/v1/positions', [PositionController::class, 'getAll']);
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
 //    Route::prefix('v1')->group(

@@ -18,7 +18,7 @@ class PositionFactory extends Factory
     public function definition(): array
     {
         return [
-            'position' => fake()->jobTitle
+            'name' => fake()->jobTitle
         ];
     }
 }

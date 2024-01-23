@@ -19,7 +19,7 @@ class UserByIdJsonResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'position' => $this->position->position,
+            'position' => $this->position->name,
             'position_id' => $this->position->id,
             'photo' => asset($this->photo)
         ];
