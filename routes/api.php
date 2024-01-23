@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-
-Route::get('/v1/users', [UserController::class, 'getAll']);
+Route::get('/v1/token', [AuthController::class, 'getToken']);
+Route::get('/v1/users', [UserController::class, 'getAll'])->middleware('auth.jwt');
 Route::post('/v1/users', [UserController::class, 'register']);
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
