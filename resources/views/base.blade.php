@@ -63,7 +63,9 @@
     </tbody>
 </table>
 <button type="button" id="showMoreUsersButton" class="btn btn-secondary btn-sm">Show more</button>
-<button id="button1"> 1 </button>
+<button id="button1"> 1</button>
+<button id="button2"> 2</button>
+<button id="button3"> 3</button>
 <!-- Modal for create-->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -116,6 +118,7 @@
 </body>
 </html>
 <script defer>
+    let token;
     let page = 1;
 
     function showCreateModal() {
@@ -137,8 +140,11 @@
     }
 
     // $(document).ready(function () {
+    getToken(function (result) {
+        token = result;
+    });
 
-    let table = loadTable();
+    loadTable(token);
     //table.data = load();
     // $.ajaxSetup({
     //     headers: {
@@ -152,11 +158,17 @@
     });
 
     $('#showMoreUsersButton').click(function () {
-        showMoreUsers();
+        showMoreUsers(token);
     });
 
-    $('#button1').click(function () {
+    $('#button2').click(function () {
+        console.log(token);
+    });
 
+    $('#button3').click(function () {
+        getResult(function (result) {
+            token = result;
+        })
     });
 
     $('#saveChangesCreateCategoryButton').click(function () {
@@ -208,46 +220,119 @@
     {{--    return result;--}}
     {{--}--}}
 
-    function loadTable(){
-        let table = $('#myTable').DataTable({
-            stateSave: true,
-            columns: [
-                {data: 'id'},
-                {data: 'name'},
-                {data: 'email'},
-                {data: 'phone'},
-                {data: 'position'},
-                {data: 'position_id'},
-                {data: 'registration_timestamp'},
-                {data: 'photo'}
-            ],
-        });
 
-        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+    function loadTable(token) {
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        }
+
+        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
             return response.json();
         }).then(function (data) {
-            if(data.success) {
+            console.log(data);
+            if (data.success) {
+                let table = $('#myTable').DataTable({
+                    stateSave: true,
+                    columns: [
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: 'email'},
+                        {data: 'phone'},
+                        {data: 'position'},
+                        {data: 'position_id'},
+                        {data: 'registration_timestamp'},
+                        {data: 'photo'}
+                    ],
+                });
                 data.users.forEach(function (value) {
                     table.row.add(value).draw();
                 });
+                page++;
+                return table;
             } else {
-                alert('error');
+                console.log(data);
+                fetch("{{route('token')}}").then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                    token = data.token;
+                    loadTable(data.token);
+                });
             }
         });
-        page++;
-        return table;
     }
 
-    function showMoreUsers() {
-        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+    function showMoreUsers(token) {
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        }
+
+        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
             return response.json();
         }).then(function (data) {
+            console.log(data);
             data.users.forEach(function (value) {
-                table.row.add(value).draw();
+                $('#myTable').DataTable().row.add(value).draw();
             });
         });
         page++;
     }
+
+    {{--function getToken() {--}}
+    {{--    fetch("{{route('token')}}").then(function (response) {--}}
+    {{--        return response.json();--}}
+    {{--    }).then(function (data) {--}}
+    {{--        alert(data.token);--}}
+    {{--    });--}}
+    {{--}--}}
+
+
+
+    function getUsers(token) {
+        fetch(
+            "{{route('token')}}", {
+                method: GET,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            }
+        ).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+        });
+    }
+
+    // function setToken(tokenValue) {
+    //     token = tokenValue;
+    // }
+
+    function getResult(callback) {
+        fetch("{{route('token')}}").then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            callback(data.token);
+        });
+    }
+
+    function getToken(callback) {
+        fetch("{{route('token')}}").then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            callback(data.token);
+        });
+    }
+
+    // getResult(function(result) {
+    //     token = result;
+    // })
+
 
     {{--function doo(){--}}
     {{--    fetch('{{route('api.category.destroy', '')}}' + '/' + '12',  {--}}
