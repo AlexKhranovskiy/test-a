@@ -253,7 +253,6 @@
                 page++;
                 return table;
             } else {
-                console.log(data);
                 fetch("{{route('token')}}").then(function (response) {
                     return response.json();
                 }).then(function (data) {
@@ -272,16 +271,25 @@
                 'Accept': 'application/json'
             }
         }
-
         fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
             return response.json();
         }).then(function (data) {
-            console.log(data);
-            data.users.forEach(function (value) {
-                $('#myTable').DataTable().row.add(value).draw();
-            });
+            if (data.success) {
+                console.log(data);
+                data.users.forEach(function (value) {
+                    $('#myTable').DataTable().row.add(value).draw();
+                });
+                page++;
+            } else {
+                fetch("{{route('token')}}").then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                    token = data.token;
+                    showMoreUsers(data.token);
+                });
+            }
         });
-        page++;
     }
 
     {{--function getToken() {--}}
