@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-Route::get('/v1/token', [AuthController::class, 'getToken']);
-Route::get('/v1/users', [UserController::class, 'getAll']); //->middleware('auth.jwt');
-Route::post('/v1/users', [UserController::class, 'register']);
-Route::get('/v1/users/{id}', [UserController::class, 'getById']);
-Route::get('/v1/positions', [PositionController::class, 'getAll']);
+Route::get('/v1/token', [AuthController::class, 'getToken'])->name('token');
+Route::get('/v1/users', [UserController::class, 'getAll'])->name('users.all'); //->middleware('auth.jwt');
+Route::post('/v1/users', [UserController::class, 'register'])->name('users.register');
+Route::get('/v1/users/{id}', [UserController::class, 'getById'])->name('users.show');
+Route::get('/v1/positions', [PositionController::class, 'getAll'])->name('positions.show');
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
 //    Route::prefix('v1')->group(
