@@ -326,6 +326,7 @@
             },
             error: function (data) {
                 console.log(data);
+                alert(data.responseJSON.message);
             }
         });
     }
