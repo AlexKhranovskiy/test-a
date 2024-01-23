@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 //});
 Route::get('/v1/token', [AuthController::class, 'getToken'])->name('token');
 Route::get('/v1/users', [UserController::class, 'getAll'])->name('users.all')->middleware('auth.jwt');
-Route::post('/v1/users', [UserController::class, 'register'])->name('users.register');
+Route::post('/v1/users', [UserController::class, 'register'])->name('users.register')->middleware('auth.jwt');;
 //Route::post('/v1/users', function(Request $request){
 //    file_put_contents(__DIR__. '/2.txt', print_r($request->all(), 1));
 //})->name('users.register');

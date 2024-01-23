@@ -313,6 +313,9 @@
         formData.append('position_id', $("#inputRegisterUserPositionId").val());
         formData.append('photo', $('#inputRegisterUserPhoto')[0].files[0]);
         $.ajax({
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
             method: "post",
             url: '{{route('users.register')}}',
             data: formData,
