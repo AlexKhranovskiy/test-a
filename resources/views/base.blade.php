@@ -137,6 +137,7 @@
     }
 
     // $(document).ready(function () {
+
     let table = loadTable();
     //table.data = load();
     // $.ajaxSetup({
@@ -182,12 +183,33 @@
     // });
     //});
 
-    function loadTable() {
-        let result = $('#myTable').DataTable({
-            ajax: {
-                url: "{{route('users.all')}}" + "?page=" + page,
-                dataSrc: 'users'
-            },
+    {{--function loadTable() {--}}
+    {{--    let result = $('#myTable').DataTable({--}}
+    {{--        ajax: {--}}
+    {{--            url: "{{route('users.all')}}" + "?page=" + page,--}}
+    {{--            dataSrc: 'users'--}}
+    {{--        },--}}
+    {{--        stateSave: true,--}}
+    {{--        columns: [--}}
+    {{--            {data: 'id'},--}}
+    {{--            {data: 'name'},--}}
+    {{--            {data: 'email'},--}}
+    {{--            {data: 'phone'},--}}
+    {{--            {data: 'position'},--}}
+    {{--            {data: 'position_id'},--}}
+    {{--            {data: 'registration_timestamp'},--}}
+    {{--            {data: 'photo'}--}}
+    {{--        ],--}}
+    {{--        "drawCallback": function (settings) {--}}
+    {{--            console.log(settings.json);--}}
+    {{--        },--}}
+    {{--    });--}}
+    {{--    page++;--}}
+    {{--    return result;--}}
+    {{--}--}}
+
+    function loadTable(){
+        let table = $('#myTable').DataTable({
             stateSave: true,
             columns: [
                 {data: 'id'},
@@ -200,8 +222,20 @@
                 {data: 'photo'}
             ],
         });
+
+        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if(data.success) {
+                data.users.forEach(function (value) {
+                    table.row.add(value).draw();
+                });
+            } else {
+                alert('error');
+            }
+        });
         page++;
-        return result;
+        return table;
     }
 
     function showMoreUsers() {
