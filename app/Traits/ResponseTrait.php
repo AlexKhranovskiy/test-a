@@ -13,8 +13,6 @@ trait ResponseTrait
             'success' => true,
         ];
 
-        //$result[] = $data;
-
         return response()->json(array_merge($result, $data));
     }
 
@@ -26,7 +24,7 @@ trait ResponseTrait
         ];
 
         if (!is_null($data)) {
-            $result[] = $data;
+            $result = array_merge($result, $data);
         }
 
         return response()->json($result, $code);

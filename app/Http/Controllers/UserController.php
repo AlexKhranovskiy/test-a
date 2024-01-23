@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UsersJsonResource;
+use App\Http\Resources\UsersAllJsonResource;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
@@ -35,5 +35,10 @@ class UserController extends Controller
             $request->get('position_id'),
             $request->file('photo')
         );
+    }
+
+    public function getById(mixed $id): JsonResponse
+    {
+        return $this->userService->getById($id);
     }
 }

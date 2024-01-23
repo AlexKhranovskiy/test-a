@@ -20,8 +20,9 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 Route::get('/v1/token', [AuthController::class, 'getToken']);
-Route::get('/v1/users', [UserController::class, 'getAll'])->middleware('auth.jwt');
+Route::get('/v1/users', [UserController::class, 'getAll']); //->middleware('auth.jwt');
 Route::post('/v1/users', [UserController::class, 'register']);
+Route::get('/v1/users/{id}', [UserController::class, 'getById']); //->whereNumber('id');
 
 //Route::group(['middleware' => ['auth.jwt']], function () {
 //    Route::prefix('v1')->group(

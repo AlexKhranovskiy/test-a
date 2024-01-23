@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UsersJsonResource;
+use App\Http\Resources\UserByIdJsonResource;
+use App\Http\Resources\UsersAllJsonResource;
 use App\Models\User;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserService
 {
@@ -39,7 +42,7 @@ class UserService
         $paginatedUsers->appends('count', $count);
 
         foreach ($paginatedUsers as $paginatedUser) {
-            $result[] = new UsersJsonResource($paginatedUser);
+            $result[] = new UsersAllJsonResource($paginatedUser);
         }
 
         return $this->responseWithSuccess([
@@ -78,6 +81,40 @@ class UserService
             return $this->responseWithSuccess([
                 'user_id' => $newUser->id,
                 'message' => 'New user successfully registered'
+            ]);
+        }
+    }
+
+    public function getById(mixed $id): JsonResponse
+    {
+        $validator = Validator::make(['user_id' => $id], [
+            'user_id' => 'integer',
+        ], [
+            'integer' => 'The :attribute must be an integer.',
+        ], [
+            'user_id' => 'user_id'
+        ]);
+
+        if ($validator->fails()) {
+            throw new HttpResponseException(
+                $this->validationErrorResponse($validator)
+            );
+        }
+
+        $user = User::find($id);
+
+        if (is_null($user)) {
+            return $this->responseWithError(
+                'The user with the requested identifier does not exist',
+                404, [
+                    'fails' => [
+                        'user_id' => 'User not found'
+                    ]
+                ]
+            );
+        } else {
+            return $this->responseWithSuccess([
+                'user' => new UserByIdJsonResource($user)
             ]);
         }
     }

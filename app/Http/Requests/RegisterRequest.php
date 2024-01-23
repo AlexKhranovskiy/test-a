@@ -47,9 +47,9 @@ class RegisterRequest extends FormRequest
         $validator->after(function ($validator) {
             $file = $this->file('photo');
             if ($file?->getSize() === 0) {
-                $validator->errors()->add('photo', 'Empty file or corrupted');
+                $validator->errors()->add('photo', 'Image is invalid.');
             } elseif($file?->getSize() > 5 * 1024 * 1024){
-                $validator->errors()->add('photo', 'The photo size must not be greater than 5 Mb');
+                $validator->errors()->add('photo', 'The photo size must not be greater than 5 Mbytes.');
             }
         });
     }
