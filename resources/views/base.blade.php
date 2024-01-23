@@ -63,8 +63,7 @@
     </tbody>
 </table>
 <button type="button" id="showMoreUsersButton" class="btn btn-secondary btn-sm">Show more</button>
-<button id="button1">set array</button>
-<button id="button2">load to table</button>
+<button id="button1"> 1 </button>
 <!-- Modal for create-->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -117,7 +116,6 @@
 </body>
 </html>
 <script defer>
-    //let users = [];
     let page = 1;
 
     function showCreateModal() {
@@ -153,111 +151,69 @@
     });
 
     $('#showMoreUsersButton').click(function () {
-        //table.destroy();
         showMoreUsers();
-        //table.ajax.reload();
-        //window.table.reload();
     });
 
     $('#button1').click(function () {
+
+    });
+
+    $('#saveChangesCreateCategoryButton').click(function () {
+        $("#createModal").modal('hide');
+        $.ajax({
+            method: "post",
+            url: '{{route('users.register')}}',
+            dataType: 'json',
+            data: {
+                'name': $("#inputCreateCategoryName").val()
+            },
+            success: function (data) {
+                $("#alertSuccess").text('New category successfully created')
+                    .fadeIn(300).delay(2000).fadeOut(400);
+                table.ajax.reload();
+                console.log(data);
+            }
+        });
+    });
+    // $('body').on('click', '#deleteCategoryButton', function () {
+    // }).on('click', '#saveChangesEditCategoryButton', function () {
+    // }).on('click','#newCategoryButton', function () {
+    // }).on('click', '#saveChangesCreateCategoryButton', function () {
+    // });
+    //});
+
+    function loadTable() {
+        let result = $('#myTable').DataTable({
+            ajax: {
+                url: "{{route('users.all')}}" + "?page=" + page,
+                dataSrc: 'users'
+            },
+            stateSave: true,
+            columns: [
+                {data: 'id'},
+                {data: 'name'},
+                {data: 'email'},
+                {data: 'phone'},
+                {data: 'position'},
+                {data: 'position_id'},
+                {data: 'registration_timestamp'},
+                {data: 'photo'}
+            ],
+        });
         page++;
+        return result;
+    }
 
-    });
-
-    $('#button2').click(function () {
-        var table = $('#myTable').DataTable();
-        table.row.add(users[0][0]).draw();
-
-
-        // let dataSource;
-        // users.forEach(function(value, index){
-        //     dataSource.push(value);
-        // });
-        // console.log(dataSource);
-        //table.destroy();
-        // new DataTable('#myTable', {
-        //     stateSave: true,
-        //     columns: [
-        //         {data: 'id'},
-        //         {data: 'name'},
-        //         {data: 'email'},
-        //         {data: 'phone'},
-        //         {data: 'position'},
-        //         {data: 'position_id'},
-        //         {data: 'registration_timestamp'},
-        //         {data: 'photo'}
-        //     ],
-        //     data: users[0]
-        // });
-    });
-
-        $('#saveChangesCreateCategoryButton').click(function () {
-            $("#createModal").modal('hide');
-            $.ajax({
-                method: "post",
-                url: '{{route('users.register')}}',
-                dataType: 'json',
-                data: {
-                    'name': $("#inputCreateCategoryName").val()
-                },
-                success: function (data) {
-                    $("#alertSuccess").text('New category successfully created')
-                        .fadeIn(300).delay(2000).fadeOut(400);
-                    table.ajax.reload();
-                    console.log(data);
-                }
+    function showMoreUsers() {
+        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            data.users.forEach(function (value) {
+                table.row.add(value).draw();
             });
         });
-        // $('body').on('click', '#deleteCategoryButton', function () {
-        // }).on('click', '#saveChangesEditCategoryButton', function () {
-        // }).on('click','#newCategoryButton', function () {
-        // }).on('click', '#saveChangesCreateCategoryButton', function () {
-        // });
-        //});
-
-        function loadTable() {
-           let result = $('#myTable').DataTable({
-                ajax: {
-                    url: "{{route('users.all')}}" + "?page=" + page,
-                    dataSrc: 'users'
-                },
-                stateSave: true,
-                columns: [
-                    {data: 'id'},
-                    {data: 'name'},
-                    {data: 'email'},
-                    {data: 'phone'},
-                    {data: 'position'},
-                    {data: 'position_id'},
-                    {data: 'registration_timestamp'},
-                    {data: 'photo'}
-                ],
-            });
-            page++;
-            return result;
-        }
-
-        function showMoreUsers() {
-            fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                //console.log(data.users);
-                if (data.success) {
-                    //users.push(data.users);
-                    let users = data.users;
-                    console.log(users, page);
-                    //table = $('#myTable').DataTable();
-                    users.forEach(function (value){
-                        table.row.add(value).draw();
-                    });
-
-
-                } else {
-                    // proccess server errors } })
-                }
-            });
-            page++;
-        }
+        page++;
+    }
 
     {{--function doo(){--}}
     {{--    fetch('{{route('api.category.destroy', '')}}' + '/' + '12',  {--}}
