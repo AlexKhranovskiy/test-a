@@ -63,9 +63,9 @@
     </tbody>
 </table>
 <button type="button" id="showMoreUsersButton" class="btn btn-secondary btn-sm">Show more</button>
-<button id="button1"> 1</button>
-<button id="button2"> 2</button>
-<button id="button3"> 3</button>
+{{--<button id="button1"> 1</button>--}}
+{{--<button id="button2"> 2</button>--}}
+{{--<button id="button3"> 3</button>--}}
 <!-- Modal for create-->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -161,15 +161,15 @@
         showMoreUsers(token);
     });
 
-    $('#button2').click(function () {
-        console.log(token);
-    });
-
-    $('#button3').click(function () {
-        getResult(function (result) {
-            token = result;
-        })
-    });
+    // $('#button2').click(function () {
+    //     console.log(token);
+    // });
+    //
+    // $('#button3').click(function () {
+    //     getResult(function (result) {
+    //         token = result;
+    //     })
+    // });
 
     $('#saveChangesCreateCategoryButton').click(function () {
         $("#createModal").modal('hide');
@@ -194,32 +194,6 @@
     // }).on('click', '#saveChangesCreateCategoryButton', function () {
     // });
     //});
-
-    {{--function loadTable() {--}}
-    {{--    let result = $('#myTable').DataTable({--}}
-    {{--        ajax: {--}}
-    {{--            url: "{{route('users.all')}}" + "?page=" + page,--}}
-    {{--            dataSrc: 'users'--}}
-    {{--        },--}}
-    {{--        stateSave: true,--}}
-    {{--        columns: [--}}
-    {{--            {data: 'id'},--}}
-    {{--            {data: 'name'},--}}
-    {{--            {data: 'email'},--}}
-    {{--            {data: 'phone'},--}}
-    {{--            {data: 'position'},--}}
-    {{--            {data: 'position_id'},--}}
-    {{--            {data: 'registration_timestamp'},--}}
-    {{--            {data: 'photo'}--}}
-    {{--        ],--}}
-    {{--        "drawCallback": function (settings) {--}}
-    {{--            console.log(settings.json);--}}
-    {{--        },--}}
-    {{--    });--}}
-    {{--    page++;--}}
-    {{--    return result;--}}
-    {{--}--}}
-
 
     function loadTable(token) {
         let config = {
@@ -292,42 +266,28 @@
         });
     }
 
-    {{--function getToken() {--}}
-    {{--    fetch("{{route('token')}}").then(function (response) {--}}
+    {{--function getUsers(token) {--}}
+    {{--    fetch(--}}
+    {{--        "{{route('token')}}", {--}}
+    {{--            method: GET,--}}
+    {{--            headers: {--}}
+    {{--                'Authorization': 'Bearer ' + token--}}
+    {{--            }--}}
+    {{--        }--}}
+    {{--    ).then(function (response) {--}}
     {{--        return response.json();--}}
     {{--    }).then(function (data) {--}}
-    {{--        alert(data.token);--}}
+    {{--        console.log(data);--}}
     {{--    });--}}
     {{--}--}}
 
-
-
-    function getUsers(token) {
-        fetch(
-            "{{route('token')}}", {
-                method: GET,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            }
-        ).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            console.log(data);
-        });
-    }
-
-    // function setToken(tokenValue) {
-    //     token = tokenValue;
-    // }
-
-    function getResult(callback) {
-        fetch("{{route('token')}}").then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            callback(data.token);
-        });
-    }
+    {{--function getResult(callback) {--}}
+    {{--    fetch("{{route('token')}}").then(function (response) {--}}
+    {{--        return response.json();--}}
+    {{--    }).then(function (data) {--}}
+    {{--        callback(data.token);--}}
+    {{--    });--}}
+    {{--}--}}
 
     function getToken(callback) {
         fetch("{{route('token')}}").then(function (response) {
@@ -336,11 +296,6 @@
             callback(data.token);
         });
     }
-
-    // getResult(function(result) {
-    //     token = result;
-    // })
-
 
     {{--function doo(){--}}
     {{--    fetch('{{route('api.category.destroy', '')}}' + '/' + '12',  {--}}
