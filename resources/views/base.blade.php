@@ -37,7 +37,7 @@
     <thead>
     <tr>
         <th scope="col">
-            <button type="button" id="newCategoryButton" class="btn btn-secondary btn-sm">New</button>
+            <button type="button" id="newCategoryButton" class="btn btn-secondary btn-sm">Register</button>
         </th>
         <th scope="col">Name</th>
         <th scope="col">E-mail</th>
@@ -67,23 +67,31 @@
 {{--<button id="button2"> 2</button>--}}
 {{--<button id="button3"> 3</button>--}}
 <!-- Modal for create-->
-<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="registerUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Register user</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <label for="inputCreateCategoryName" id="inputCreateCategoryId">Name:</label>
-                <input id="inputCreateCategoryName" name="categoryName" type="text"/>
+                <label for="inputRegisterUserName">Name:</label>
+                <input id="inputRegisterUserName" name="name" type="text"/><br/>
+                <label for="inputRegisterUserEmail">E-mail:</label>
+                <input id="inputRegisterUserEmail" name="email" type="text"/><br/>
+                <label for="inputRegisterUserPhone">Phone:</label>
+                <input id="inputRegisterUserPhone" name="phone" type="text"/><br/>
+                <label for="inputRegisterUserPositionId">Position_id:</label>
+                <input id="inputRegisterUserPositionId" name="position_id" type="text"/><br/>
+                <label for="inputRegisterUserPhoto">Photo:</label>
+                <input id="inputRegisterUserPhoto" name="photo" type="file"/><br/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" id="saveChangesCreateCategoryButton" class="btn btn-primary btn-sm">Save changes
+                <button type="button" id="saveChangesRegisterUserButton" class="btn btn-primary btn-sm">Save changes
                 </button>
             </div>
         </div>
@@ -122,7 +130,7 @@
     let page = 1;
 
     function showCreateModal() {
-        $("#createModal").modal();
+        $("#registerUserModal").modal();
     }
 
     function showEditModal(categoryId) {
@@ -171,27 +179,27 @@
     //     })
     // });
 
-    $('#saveChangesCreateCategoryButton').click(function () {
-        $("#createModal").modal('hide');
-        $.ajax({
-            method: "post",
-            url: '{{route('users.register')}}',
-            dataType: 'json',
-            data: {
-                'name': $("#inputCreateCategoryName").val()
-            },
-            success: function (data) {
-                $("#alertSuccess").text('New category successfully created')
-                    .fadeIn(300).delay(2000).fadeOut(400);
-                table.ajax.reload();
-                console.log(data);
-            }
-        });
+
+    // $.ajax({
+    //     url : 'upload.php',
+    //     type : 'POST',
+    //     data : formData,
+    //     processData: false,  // tell jQuery not to process the data
+    //     contentType: false,  // tell jQuery not to set contentType
+    //     success : function(data) {
+    //         console.log(data);
+    //         alert(data);
+    //     }
+    // });
+
+    $('#saveChangesRegisterUserButton').click(function () {
+        $("#registerUserModal").modal('hide');
+        registerUser(token);
     });
     // $('body').on('click', '#deleteCategoryButton', function () {
     // }).on('click', '#saveChangesEditCategoryButton', function () {
     // }).on('click','#newCategoryButton', function () {
-    // }).on('click', '#saveChangesCreateCategoryButton', function () {
+    // }).on('click', '#saveChangesRegisterUserButton', function () {
     // });
     //});
 
@@ -294,6 +302,28 @@
             return response.json();
         }).then(function (data) {
             callback(data.token);
+        });
+    }
+
+    function registerUser(token){
+        let formData = new FormData();
+        formData.append('name', $("#inputRegisterUserName").val());
+        formData.append('email',$("#inputRegisterUserEmail").val() );
+        formData.append('phone', $("#inputRegisterUserPhone").val());
+        formData.append('position_id', $("#inputRegisterUserPositionId").val());
+        formData.append('photo', $('#inputRegisterUserPhoto')[0].files[0]);
+        $.ajax({
+            method: "post",
+            url: '{{route('users.register')}}',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
         });
     }
 
