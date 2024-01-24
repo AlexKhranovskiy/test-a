@@ -7,6 +7,7 @@ use App\Http\Resources\UserByIdJsonResource;
 use App\Http\Resources\UsersAllJsonResource;
 use App\Models\User;
 use App\Traits\ResponseTrait;
+use Faker\Core\File;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,10 +20,14 @@ class UserService
     use ResponseTrait;
 
     protected User $user;
+    protected FileService $fileService;
+    protected TinyPngService $tinyPngService;
 
-    public function __construct(User $user)
+    public function __construct(User $user, FileService $fileService, TinyPngService $tinyPngService)
     {
         $this->user = $user;
+        $this->fileService = $fileService;
+        $this->tinyPngService = $tinyPngService;
     }
 
     public function getAllWithPagination(?int $count): JsonResponse
@@ -70,15 +75,24 @@ class UserService
         if (!is_null($user)) {
             return $this->responseWithError('User with this phone or email already exist', 409);
         } else {
-            $t = new TinyPngService();
-            $fileName = $t->fitPhotoByThumbAlgorithmConvertToJpg(public_path(), $fileName);
+            $this->fileService->setDirectory(public_path());
+            $this->fileService->setFileName($fileName);
+            if (!$this->fileService->hasJpgOrJpegExtension()) {
+                $extension = $this->tinyPngService->convertToJpeg(
+                    $this->fileService->getFileDirectory(), $this->fileService->getFileName()
+                );
+                $this->fileService->renameFileExtension($extension);
+            }
+            $this->tinyPngService->fitPhotoByThumbAlgorithm(
+                $this->fileService->getFileDirectory(), $this->fileService->getFileName()
+            );
 
             $newUser = $this->user->create([
                 'name' => $name,
                 'email' => $email,
                 'phone' => $phone,
                 'position_id' => $positionId,
-                'photo' => $fileName
+                'photo' => $this->fileService->getFileName()
             ]);
 
             return $this->responseWithSuccess([
