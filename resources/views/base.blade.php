@@ -226,7 +226,14 @@
                         {data: 'position'},
                         {data: 'position_id'},
                         {data: 'registration_timestamp'},
-                        {data: 'photo'}
+                        {data: 'photo', render: function (data, type, row) {
+                                return `<img
+                                    class="fit-picture"
+                                    src="${data}"
+                                    alt="No image" /> `;
+
+                            }
+                        }
                     ],
                 });
                 data.users.forEach(function (value) {
