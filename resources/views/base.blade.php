@@ -312,23 +312,51 @@
         formData.append('phone', $("#inputRegisterUserPhone").val());
         formData.append('position_id', $("#inputRegisterUserPositionId").val());
         formData.append('photo', $('#inputRegisterUserPhoto')[0].files[0]);
-        $.ajax({
+
+        let config = {
             headers: {
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
             },
-            method: "post",
-            url: '{{route('users.register')}}',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                console.log(data);
-            },
-            error: function (data) {
-                console.log(data);
-                alert(data.responseJSON.message);
+            method: 'POST',
+            body: formData
+        }
+        fetch("{{route('users.register')}}", config).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            if(data.success){
+                alert(data.message);
+            } else {
+                alert(data.message + " You may reload the page to work with a new token.");
             }
         });
+
+        {{--$.ajax({--}}
+        {{--    headers: {--}}
+        {{--        'Authorization': 'Bearer ' + token--}}
+        {{--    },--}}
+        {{--    method: "post",--}}
+        {{--    url: '{{route('users.register')}}',--}}
+        {{--    data: formData,--}}
+        {{--    processData: false,--}}
+        {{--    contentType: false,--}}
+        {{--    success: function (data) {--}}
+        {{--        console.log(data);--}}
+        {{--    },--}}
+        {{--    error: function (data) {--}}
+        {{--        console.log(data);--}}
+        {{--        if(data.status === 401){--}}
+        {{--            fetch("{{route('token')}}").then(function (response) {--}}
+        {{--                return response.json();--}}
+        {{--            }).then(function (data) {--}}
+        {{--                console.log(data);--}}
+        {{--                token = data.token;--}}
+        {{--            });--}}
+        {{--        }--}}
+        {{--        alert(data.responseJSON.message);--}}
+        {{--    }--}}
+        {{--});--}}
     }
 
     {{--function doo(){--}}
