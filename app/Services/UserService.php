@@ -78,6 +78,9 @@ class UserService
                 'photo' => $fileName
             ]);
 
+            $t = new TinyPngService();
+            $t->fitPhoto('/var/www/html/public/' . $fileName);
+
             return $this->responseWithSuccess([
                 'user_id' => $newUser->id,
                 'message' => 'New user successfully registered'
