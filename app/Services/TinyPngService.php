@@ -7,8 +7,6 @@ use App\Traits\LoggerTrait;
 /** Service for working with remote TinyPng service  */
 class TinyPngService
 {
-    use LoggerTrait;
-
     /** Resizes and handles image file using thumb algorithm.
      * @param string $fileDirectory
      * @param string $fileName
@@ -20,10 +18,6 @@ class TinyPngService
         string $fileDirectory, string $fileName, int $width = 70, int $height = 70
     ): void
     {
-        $this->writeInfoLog('fitPhotoByThumbAlgorithm', [
-            '$fileDirectory' => $fileDirectory,
-            '$fileName' => $fileName,
-        ]);
         \Tinify\setKey(env('TINY_PNG_SERVICE_API_KEY', 'lpFY4p5k4bzqgtDV8H3pBTg1h748SyzY'));
         $source = \Tinify\fromFile($fileDirectory . '/' . $fileName);
         $resized = $source->resize(array(
@@ -32,10 +26,6 @@ class TinyPngService
             "height" => $height
         ));
         $resized->toFile($fileDirectory . '/' . $fileName);
-        $this->writeInfoLog('fitPhotoByThumbAlgorithm ended', [
-            '$fileDirectory' => $fileDirectory,
-            '$fileName' => $fileName,
-        ]);
     }
 
     /** Converts format of image file to jpeg.

@@ -7,8 +7,6 @@ use App\Traits\LoggerTrait;
 /** Service for handling file uploaded file */
 class FileService
 {
-    use LoggerTrait;
-
     protected string $directory;
     protected string $fileName;
 
