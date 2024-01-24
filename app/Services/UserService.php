@@ -2,19 +2,17 @@
 
 namespace App\Services;
 
-use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserByIdJsonResource;
 use App\Http\Resources\UsersAllJsonResource;
 use App\Models\User;
 use App\Traits\ResponseTrait;
-use Faker\Core\File;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
+/** Service for working with User */
 class UserService
 {
     use ResponseTrait;
@@ -77,12 +75,14 @@ class UserService
         } else {
             $this->fileService->setDirectory(public_path());
             $this->fileService->setFileName($fileName);
+
             if (!$this->fileService->hasJpgOrJpegExtension()) {
                 $extension = $this->tinyPngService->convertToJpeg(
                     $this->fileService->getFileDirectory(), $this->fileService->getFileName()
                 );
                 $this->fileService->renameFileExtension($extension);
             }
+
             $this->tinyPngService->fitPhotoByThumbAlgorithm(
                 $this->fileService->getFileDirectory(), $this->fileService->getFileName()
             );
