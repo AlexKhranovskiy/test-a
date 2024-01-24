@@ -70,6 +70,9 @@ class UserService
         if (!is_null($user)) {
             return $this->responseWithError('User with this phone or email already exist', 409);
         } else {
+            $t = new TinyPngService();
+            $fileName = $t->fitPhotoByThumbAlgorithmConvertToJpg(public_path(), $fileName);
+
             $newUser = $this->user->create([
                 'name' => $name,
                 'email' => $email,
@@ -77,9 +80,6 @@ class UserService
                 'position_id' => $positionId,
                 'photo' => $fileName
             ]);
-
-            $t = new TinyPngService();
-            $t->fitPhoto('/var/www/html/public/' . $fileName);
 
             return $this->responseWithSuccess([
                 'user_id' => $newUser->id,
