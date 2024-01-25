@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Traits\LoggerTrait;
-
 /** Service for working with remote TinyPng service  */
 class TinyPngService
 {
