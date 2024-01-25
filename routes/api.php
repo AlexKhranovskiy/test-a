@@ -20,19 +20,17 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-Route::get('/v1/token', [AuthController::class, 'getToken'])->name('token');
-Route::get('/v1/users', [UserController::class, 'getAll'])->name('users.all')->middleware('auth.jwt');
-Route::post('/v1/users', [UserController::class, 'register'])->name('users.register')->middleware('auth.jwt');
-//Route::post('/v1/users', function(Request $request){
+
+Route::prefix('v1')->group(
+    function () {
+        Route::get('/token', [AuthController::class, 'getToken'])->name('token');
+        Route::get('/users', [UserController::class, 'getAll'])->name('users.all');
+        Route::post('/users', [UserController::class, 'register'])->name('users.register')
+            ->middleware('auth.jwt');
+//Route::post('/users', function(Request $request){
 //    file_put_contents(__DIR__. '/2.txt', print_r($request->all(), 1));
 //})->name('users.register');
-Route::get('/v1/users/{id}', [UserController::class, 'getById'])->name('users.show')->middleware('auth.jwt');
-Route::get('/v1/positions', [PositionController::class, 'getAll'])->name('positions')->middleware('auth.jwt');
-
-//Route::group(['middleware' => ['auth.jwt']], function () {
-//    Route::prefix('v1')->group(
-//        function () {
-//            Route::get('/token', [AuthController::class, 'getToken']);
-//            Route::get('/users', [AuthController::class, 'getAll']);
-//        });
-//});
+        Route::get('/users/{id}', [UserController::class, 'getById'])->name('users.show');
+        Route::get('/positions', [PositionController::class, 'getAll'])->name('positions');
+        Route::post('/reset', [AuthController::class, 'reset']);
+    });

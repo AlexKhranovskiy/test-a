@@ -9,6 +9,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,12 +21,16 @@ class UserService
     protected User $user;
     protected FileService $fileService;
     protected TinyPngService $tinyPngService;
+    protected AuthService $authService;
 
-    public function __construct(User $user, FileService $fileService, TinyPngService $tinyPngService)
+    public function __construct(
+        User $user, FileService $fileService, TinyPngService $tinyPngService, AuthService $authService
+    )
     {
         $this->user = $user;
         $this->fileService = $fileService;
         $this->tinyPngService = $tinyPngService;
+        $this->authService = $authService;
     }
 
     public function getAllWithPagination(?int $count): JsonResponse
@@ -94,6 +99,8 @@ class UserService
                 'position_id' => $positionId,
                 'photo' => $this->fileService->getFileName()
             ]);
+
+            $this->authService->resetCurrentToken();
 
             return $this->responseWithSuccess([
                 'user_id' => $newUser->id,
