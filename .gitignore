@@ -1,6 +1,7 @@
 /.phpunit.cache
 /node_modules
 public
+!public/images/users
 /storage/*.key
 vendor
 .env

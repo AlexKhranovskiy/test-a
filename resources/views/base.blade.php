@@ -49,23 +49,9 @@
     </tr>
     </thead>
     <tbody>
-    {{--    @foreach($categories as $category)--}}
-    {{--        <tr>--}}
-    {{--            <th scope="row">--}}
-    {{--                <button type="button" class="btn btn-secondary btn-sm"--}}
-    {{--                        onclick="myShowModal({{$category->id}})">{{$category->id}}</button>--}}
-    {{--            </th>--}}
-    {{--            <td>{{$category->name}}</td>--}}
-    {{--            <td>{{$category->created_at}}</td>--}}
-    {{--            <td>{{$category->updated_at}}</td>--}}
-    {{--        </tr>--}}
-    {{--    @endforeach--}}
     </tbody>
 </table>
 <button type="button" id="showMoreUsersButton" class="btn btn-secondary btn-sm">Show more</button>
-{{--<button id="button1"> 1</button>--}}
-{{--<button id="button2"> 2</button>--}}
-{{--<button id="button3"> 3</button>--}}
 <!-- Modal for create-->
 <div class="modal fade" id="registerUserModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -84,8 +70,6 @@
                 <input id="inputRegisterUserEmail" name="email" type="text"/><br/>
                 <label for="inputRegisterUserPhone">Phone:</label>
                 <input id="inputRegisterUserPhone" name="phone" type="text"/><br/>
-                {{--                <label for="inputRegisterUserPositionId">Position_id:</label>--}}
-                {{--                <input id="inputRegisterUserPositionId" name="position_id" type="text"/><br/>--}}
                 <label for="positionSelect">Position:
                     <select id="positionSelect"></select>
                 </label><br/>
@@ -96,7 +80,6 @@
                 <button id="closeRegisterUserButton" type="button" class="btn btn-secondary btn-sm"
                         data-dismiss="modal">Close
                 </button>
-                {{--                <button id="button11" type="button" class="btn btn-secondary btn-sm">11</button>--}}
                 <button id="saveChangesRegisterUserButton" type="button" class="btn btn-primary btn-sm">Save changes
                 </button>
             </div>
@@ -115,7 +98,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <img id="imageUser" class="fit-picture"  alt="No image" /><br/>
+                <img id="imageUser" class="fit-picture" alt="No image"/><br/>
                 <label for="inputUserId">Id:</label>
                 <input id="inputUserId" name="id" type="text"/><br/>
                 <label for="inputUserName">Name:</label>
@@ -175,19 +158,11 @@
         });
     }
 
-    // $(document).ready(function () {
-    getToken(function (result) {
+     getToken(function (result) {
         token = result;
     });
 
     loadTable(token);
-    //table.data = load();
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
-
 
     $('#registerButton').click(function () {
         showRegisterModal();
@@ -196,29 +171,6 @@
     $('#showMoreUsersButton').click(function () {
         showMoreUsers(token);
     });
-
-    // $('#button2').click(function () {
-    //     console.log(token);
-    // });
-    //
-    // $('#button3').click(function () {
-    //     getResult(function (result) {
-    //         token = result;
-    //     })
-    // });
-
-
-    // $.ajax({
-    //     url : 'upload.php',
-    //     type : 'POST',
-    //     data : formData,
-    //     processData: false,  // tell jQuery not to process the data
-    //     contentType: false,  // tell jQuery not to set contentType
-    //     success : function(data) {
-    //         console.log(data);
-    //         alert(data);
-    //     }
-    // });
 
     $('#saveChangesRegisterUserButton').click(function () {
         $("#registerUserModal").modal('hide');
@@ -233,12 +185,6 @@
     $('#button11').click(function () {
         $("#positionSelect").empty();
     });
-    // $('body').on('click', '#deleteCategoryButton', function () {
-    // }).on('click', '#saveChangesEditCategoryButton', function () {
-    // }).on('click','#registerButton', function () {
-    // }).on('click', '#saveChangesRegisterUserButton', function () {
-    // });
-    //});
 
     function loadTable(token) {
         let config = {
@@ -349,40 +295,9 @@
                 });
             } else {
                 alert(data.message + " You have to reload the page to work with a new token.");
-                {{--fetch("{{route('token')}}").then(function (response) {--}}
-                {{--    return response.json();--}}
-                {{--}).then(function (data) {--}}
-                {{--    console.log(data);--}}
-                {{--    token = data.token;--}}
-                {{--    getPositions(data.token);--}}
-                {{--});--}}
             }
         });
-
     }
-
-    {{--function getUsers(token) {--}}
-    {{--    fetch(--}}
-    {{--        "{{route('token')}}", {--}}
-    {{--            method: GET,--}}
-    {{--            headers: {--}}
-    {{--                'Authorization': 'Bearer ' + token--}}
-    {{--            }--}}
-    {{--        }--}}
-    {{--    ).then(function (response) {--}}
-    {{--        return response.json();--}}
-    {{--    }).then(function (data) {--}}
-    {{--        console.log(data);--}}
-    {{--    });--}}
-    {{--}--}}
-
-    {{--function getResult(callback) {--}}
-    {{--    fetch("{{route('token')}}").then(function (response) {--}}
-    {{--        return response.json();--}}
-    {{--    }).then(function (data) {--}}
-    {{--        callback(data.token);--}}
-    {{--    });--}}
-    {{--}--}}
 
     function getToken(callback) {
         fetch("{{route('token')}}").then(function (response) {
@@ -418,43 +333,9 @@
                 alert(data.message + " You have to reload the page to work with a new token.");
             }
         });
-
-        {{--$.ajax({--}}
-        {{--    headers: {--}}
-        {{--        'Authorization': 'Bearer ' + token--}}
-        {{--    },--}}
-        {{--    method: "post",--}}
-        {{--    url: '{{route('users.register')}}',--}}
-        {{--    data: formData,--}}
-        {{--    processData: false,--}}
-        {{--    contentType: false,--}}
-        {{--    success: function (data) {--}}
-        {{--        console.log(data);--}}
-        {{--    },--}}
-        {{--    error: function (data) {--}}
-        {{--        console.log(data);--}}
-        {{--        if(data.status === 401){--}}
-        {{--            fetch("{{route('token')}}").then(function (response) {--}}
-        {{--                return response.json();--}}
-        {{--            }).then(function (data) {--}}
-        {{--                console.log(data);--}}
-        {{--                token = data.token;--}}
-        {{--            });--}}
-        {{--        }--}}
-        {{--        alert(data.responseJSON.message);--}}
-        {{--    }--}}
-        {{--});--}}
     }
 
     function emptyPositionSelect() {
         $("#positionSelect").empty();
     }
-
-    {{--function doo(){--}}
-    {{--    fetch('{{route('api.category.destroy', '')}}' + '/' + '12',  {--}}
-    {{--        method: 'DELETE'--}}
-    {{--    });--}}
-    {{--    window.table.ajax.reload();--}}
-    {{--}--}}
-
 </script>
