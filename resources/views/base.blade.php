@@ -86,11 +86,11 @@
                 <input id="inputRegisterUserPhone" name="phone" type="text"/><br/>
                 {{--                <label for="inputRegisterUserPositionId">Position_id:</label>--}}
                 {{--                <input id="inputRegisterUserPositionId" name="position_id" type="text"/><br/>--}}
-                <label for="inputRegisterUserPhoto">Photo:</label>
-                <input id="inputRegisterUserPhoto" name="photo" type="file"/><br/>
                 <label for="positionSelect">Position:
                     <select id="positionSelect"></select>
-                </label>
+                </label><br/>
+                <label for="inputRegisterUserPhoto">Photo:</label>
+                <input id="inputRegisterUserPhoto" name="photo" type="file"/><br/>
             </div>
             <div class="modal-footer">
                 <button id="closeRegisterUserButton" type="button" class="btn btn-secondary btn-sm"
@@ -316,13 +316,14 @@
                     $('#positionSelect').append($('<option></option>').text(value.name).attr('value', value.id));
                 });
             } else {
-                fetch("{{route('token')}}").then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    console.log(data);
-                    token = data.token;
-                    getPositions(data.token);
-                });
+                alert(data.message + " You have to reload the page to work with a new token.");
+                {{--fetch("{{route('token')}}").then(function (response) {--}}
+                {{--    return response.json();--}}
+                {{--}).then(function (data) {--}}
+                {{--    console.log(data);--}}
+                {{--    token = data.token;--}}
+                {{--    getPositions(data.token);--}}
+                {{--});--}}
             }
         });
 
@@ -382,7 +383,7 @@
             if (data.success) {
                 alert(data.message);
             } else {
-                alert(data.message + " You may reload the page to work with a new token.");
+                alert(data.message + " You have to reload the page to work with a new token.");
             }
         });
 
