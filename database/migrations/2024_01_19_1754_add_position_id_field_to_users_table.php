@@ -14,7 +14,7 @@ return new class extends Migration {
                 ->nullable()
                 ->default(null)
                 ->references('id')
-                ->on('positions');
+                ->on('positions')->onDelete('SET NULL');
         });
     }
 

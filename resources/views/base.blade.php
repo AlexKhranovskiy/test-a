@@ -160,7 +160,7 @@
     });
 
     $('#showMoreUsersButton').click(function () {
-        showMoreUsers(token);
+        showMoreUsers();
     });
 
     $('#saveChangesRegisterUserButton').click(function () {
@@ -224,10 +224,14 @@
             return response.json();
         }).then(function (data) {
             console.log(data);
-            data.users.forEach(function (value) {
-                $('#myTable').DataTable().row.add(value).draw();
-            });
-            page++;
+            if(data.success) {
+                data.users.forEach(function (value) {
+                    $('#myTable').DataTable().row.add(value).draw();
+                });
+                page++;
+            } else {
+                alert(data.message);
+            }
         });
     }
 

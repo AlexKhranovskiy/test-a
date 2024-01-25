@@ -121,7 +121,7 @@ class UserService
 
         if ($validator->fails()) {
             throw new HttpResponseException(
-                $this->validationErrorResponse($validator)
+                $this->validationErrorResponse($validator, code: 400)
             );
         }
 
@@ -132,7 +132,7 @@ class UserService
                 'The user with the requested identifier does not exist',
                 404, [
                     'fails' => [
-                        'user_id' => 'User not found'
+                        'user_id' => ['User not found']
                     ]
                 ]
             );

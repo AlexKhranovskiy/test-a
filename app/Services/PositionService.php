@@ -13,9 +13,12 @@ class PositionService
     public function getAll(): JsonResponse
     {
         $positions = Position::all(['id', 'name']);
-
-        return $this->responseWithSuccess([
-            'positions' => $positions->toArray()
-        ]);
+        if(sizeof($positions) === 0){
+            return $this->responseWithError("Positions not found", 422);
+        } else {
+            return $this->responseWithSuccess([
+                'positions' => $positions->toArray()
+            ]);
+        }
     }
 }
