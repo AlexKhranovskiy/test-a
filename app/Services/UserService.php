@@ -40,7 +40,7 @@ class UserService
         }
 
         $result = [];
-        $paginatedUsers = $this->user->paginate($count);
+        $paginatedUsers = $this->user->orderBy('registration_timestamp', 'desc')->paginate($count);
 
         if ($paginatedUsers->currentPage() > $paginatedUsers->lastPage()) {
             return $this->responseWithError('Page not found', 404);
