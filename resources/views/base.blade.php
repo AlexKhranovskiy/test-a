@@ -278,6 +278,12 @@
                             }
                         }
                     ],
+                    columnDefs: [{
+                        targets: [6],
+                        render: function (data, type, row) {
+                            return moment(data).format('YYYY/MM/DD/HH:mm:ss');
+                        }
+                    }],
                 });
                 data.users.forEach(function (value) {
                     table.row.add(value).draw();

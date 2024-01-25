@@ -23,13 +23,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $images = [
+            '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg',
+            '13.jpg', '14.jpg', '15.jpg'
+        ];
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             //'email_verified_at' => now(),
             //'password' => static::$password ??= Hash::make('password'),
             'phone' => fake()->phoneNumber,
-            'photo' => '/images/users/no-photo.jpg',
+            'photo' => '/images/users/'. $images[rand(0, 14)],
         ];
     }
 
@@ -38,7 +42,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }
