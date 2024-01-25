@@ -22,7 +22,7 @@ class UsersAllJsonResource extends JsonResource
             'position' => $this->position->name,
             'position_id' => $this->position->id,
             'registration_timestamp' => $this->registration_timestamp,
-            'photo' => asset($this->photo),
+            'photo' => asset('/images/users/' . $this->photo),
         ];
     }
 }

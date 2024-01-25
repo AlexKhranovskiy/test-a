@@ -14,7 +14,7 @@ class FileService
      * @param string $directory
      * @return void
      */
-    public function setDirectory(string $directory): void
+    public function setFileDirectory(string $directory): void
     {
         $this->directory = $directory;
     }

@@ -21,7 +21,7 @@ class UserByIdJsonResource extends JsonResource
             'phone' => $this->phone,
             'position' => $this->position->name,
             'position_id' => $this->position->id,
-            'photo' => asset($this->photo)
+            'photo' => asset('/images/users/' . $this->photo)
         ];
     }
 }

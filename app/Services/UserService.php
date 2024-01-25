@@ -63,17 +63,17 @@ class UserService
 
     public function register(string $name, string $email, string $phone, string $positionId, UploadedFile $photo)
     {
-        $fileName = Storage::disk('public_uploads')->put('images/users', $photo);
-
-        if (!$fileName) {
+        if (!Storage::disk('public_uploads')->put('images/users', $photo)) {
             return $this->responseWithError('Error file uploading. File have not been saved', 500);
         }
+
+        $fileName = $photo->getClientOriginalName();
 
         $user = User::where('phone', $phone)->orWhere('email', $email)->first();
         if (!is_null($user)) {
             return $this->responseWithError('User with this phone or email already exist', 409);
         } else {
-            $this->fileService->setDirectory(public_path());
+            $this->fileService->setFileDirectory(public_path() . '/images/users');
             $this->fileService->setFileName($fileName);
 
             if (!$this->fileService->hasJpgOrJpegExtension()) {

@@ -33,7 +33,7 @@ class UserFactory extends Factory
             //'email_verified_at' => now(),
             //'password' => static::$password ??= Hash::make('password'),
             'phone' => fake()->phoneNumber,
-            'photo' => '/images/users/'. $images[rand(0, 14)],
+            'photo' => $images[rand(0, 14)],
         ];
     }
 
