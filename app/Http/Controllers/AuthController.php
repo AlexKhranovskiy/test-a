@@ -3,24 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\AuthenticatorUser;
+use App\Services\AuthService;
 use App\Traits\JwtTrait;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
 
 
 class AuthController extends Controller
 {
-    use JwtTrait, ResponseTrait;
+    use ResponseTrait;
 
-    public function getToken()
+    /** Calls service's method, wraps response.
+     * @param AuthService $authService
+     * @return JsonResponse
+     */
+    public function getToken(AuthService $authService): JsonResponse
     {
-        $authenticatorUser = AuthenticatorUser::first();
-        $token = auth()->attempt([
-            'name' => $authenticatorUser->name,
-            'password' => env('AUTHENTICATOR_USER_PASSWORD', 'qwerty')
-        ]);
-        return response()->json([
-            'success' => true,
-            'token' => $token
+        return $this->responseWithSuccess([
+            'token' => $authService->getToken()
         ]);
     }
 }
