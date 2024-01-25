@@ -26,7 +26,7 @@ Route::post('/v1/users', [UserController::class, 'register'])->name('users.regis
 //Route::post('/v1/users', function(Request $request){
 //    file_put_contents(__DIR__. '/2.txt', print_r($request->all(), 1));
 //})->name('users.register');
-Route::get('/v1/users/{id}', [UserController::class, 'getById'])->name('users.show');
+Route::get('/v1/users/{id}', [UserController::class, 'getById'])->name('users.show')->middleware('auth.jwt');
 Route::get('/v1/positions', [PositionController::class, 'getAll'])->name('positions')->middleware('auth.jwt');
 
 //Route::group(['middleware' => ['auth.jwt']], function () {

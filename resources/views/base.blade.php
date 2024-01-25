@@ -103,28 +103,36 @@
         </div>
     </div>
 </div>
-<!-- Modal for edit-->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- Modal for showing user info-->
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <label for="inputEditCategoryName" id="inputEditCategoryId"></label>
-                <input id="inputEditCategoryName" name="categoryName" type="text"/>
+                <img id="imageUser" class="fit-picture"  alt="No image" /><br/>
+                <label for="inputUserId">Id:</label>
+                <input id="inputUserId" name="id" type="text"/><br/>
+                <label for="inputUserName">Name:</label>
+                <input id="inputUserName" name="name" type="text"/><br/>
+                <label for="inputUserEmail">E-mail:</label>
+                <input id="inputUserEmail" name="email" type="text"/><br/>
+                <label for="inputUserPhone">Phone:</label>
+                <input id="inputUserPhone" name="phone" type="text"/><br/>
+                <label for="inputUserPosition">Position:</label>
+                <input id="inputUserPosition" name="position" type="text"/><br/>
+                <label for="inputUserPositionId">Position_id:</label>
+                <input id="inputUserPositionId" name="position_id" type="text"/><br/>
+                <label for="inputUserPhoto">Photo:</label>
+                <input id="inputUserPhoto" name="photo" type="text"/><br/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" id="saveChangesEditCategoryButton" class="btn btn-primary btn-sm">Save changes
-                </button>
-                <button type="button" id="deleteCategoryButton"
-                        class="btn btn-danger btn-sm" data-id="">Delete
-                </button>
             </div>
         </div>
     </div>
@@ -140,19 +148,32 @@
         getPositions(token);
     }
 
-    {{--function showEditModal(categoryId) {--}}
-    {{--    let url = '{{route('users.show', '')}}' + '/' + categoryId;--}}
-    {{--    $('#deleteCategoryButton').val(categoryId);--}}
-    {{--    $.ajax({--}}
-    {{--        method: "get",--}}
-    {{--        url: url,--}}
-    {{--        success: function (response) {--}}
-    {{--            $("#inputEditCategoryId").text(response.id).val(response.id);--}}
-    {{--            $("#inputEditCategoryName").val(response.name);--}}
-    {{--            $("#editModal").modal();--}}
-    {{--        }--}}
-    {{--    });--}}
-    {{--}--}}
+    function showUserModal(userId) {
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        }
+        fetch('{{route('users.show', '')}}' + '/' + userId, config).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            if (data.success) {
+                console.log(data);
+                $("#imageUser").attr('src', data.user.photo);
+                $("#inputUserId").text(data.user.id).val(data.user.id);
+                $("#inputUserName").text(data.user.name).val(data.user.name);
+                $("#inputUserEmail").text(data.user.email).val(data.user.email);
+                $("#inputUserPhone").text(data.user.phone).val(data.user.phone);
+                $("#inputUserPosition").text(data.user.position).val(data.user.position);
+                $("#inputUserPositionId").text(data.user.position_id).val(data.user.position_id);
+                $("#inputUserPhoto").text(data.user.photo).val(data.user.photo);
+                $("#userModal").modal();
+            } else {
+                alert(data.message + " You have to reload the page to work with a new token.");
+            }
+        });
+    }
 
     // $(document).ready(function () {
     getToken(function (result) {
@@ -235,7 +256,12 @@
                 let table = $('#myTable').DataTable({
                     stateSave: true,
                     columns: [
-                        {data: 'id'},
+                        {
+                            data: 'id', render: function (data, type, row) {
+                                return '<button type="button" class="btn btn-secondary btn-sm"\n' +
+                                    `onclick="showUserModal(${data})">` + data + '</button>';
+                            }
+                        },
                         {data: 'name'},
                         {data: 'email'},
                         {data: 'phone'},
