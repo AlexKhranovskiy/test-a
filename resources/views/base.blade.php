@@ -132,37 +132,28 @@
     }
 
     function showUserModal(userId) {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/json'
-            }
-        }
-        fetch('{{route('users.show', '')}}' + '/' + userId, config).then(function (response) {
+        fetch('{{route('users.show', '')}}' + '/' + userId).then(function (response) {
+            console.log(response);
             return response.json();
         }).then(function (data) {
-            if (data.success) {
-                console.log(data);
-                $("#imageUser").attr('src', data.user.photo);
-                $("#inputUserId").text(data.user.id).val(data.user.id);
-                $("#inputUserName").text(data.user.name).val(data.user.name);
-                $("#inputUserEmail").text(data.user.email).val(data.user.email);
-                $("#inputUserPhone").text(data.user.phone).val(data.user.phone);
-                $("#inputUserPosition").text(data.user.position).val(data.user.position);
-                $("#inputUserPositionId").text(data.user.position_id).val(data.user.position_id);
-                $("#inputUserPhoto").text(data.user.photo).val(data.user.photo);
-                $("#userModal").modal();
-            } else {
-                alert(data.message + " You have to reload the page to work with a new token.");
-            }
+            console.log(data);
+            $("#imageUser").attr('src', data.user.photo);
+            $("#inputUserId").text(data.user.id).val(data.user.id);
+            $("#inputUserName").text(data.user.name).val(data.user.name);
+            $("#inputUserEmail").text(data.user.email).val(data.user.email);
+            $("#inputUserPhone").text(data.user.phone).val(data.user.phone);
+            $("#inputUserPosition").text(data.user.position).val(data.user.position);
+            $("#inputUserPositionId").text(data.user.position_id).val(data.user.position_id);
+            $("#inputUserPhoto").text(data.user.photo).val(data.user.photo);
+            $("#userModal").modal();
         });
     }
 
-     getToken(function (result) {
+    getToken(function (result) {
         token = result;
     });
 
-    loadTable(token);
+    loadTable();
 
     $('#registerButton').click(function () {
         showRegisterModal();
@@ -182,120 +173,73 @@
         emptyPositionSelect();
     });
 
-    $('#button11').click(function () {
-        $("#positionSelect").empty();
-    });
-
-    function loadTable(token) {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/json'
-            }
-        }
-
-        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
+    function loadTable() {
+        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+            console.log(response)
             return response.json();
         }).then(function (data) {
             console.log(data);
-            if (data.success) {
-                let table = $('#myTable').DataTable({
-                    stateSave: true,
-                    columns: [
-                        {
-                            data: 'id', render: function (data, type, row) {
-                                return '<button type="button" class="btn btn-secondary btn-sm"\n' +
-                                    `onclick="showUserModal(${data})">` + data + '</button>';
-                            }
-                        },
-                        {data: 'name'},
-                        {data: 'email'},
-                        {data: 'phone'},
-                        {data: 'position'},
-                        {data: 'position_id'},
-                        {data: 'registration_timestamp'},
-                        {
-                            data: 'photo', render: function (data, type, row) {
-                                return `<img
+            let table = $('#myTable').DataTable({
+                stateSave: true,
+                columns: [
+                    {
+                        data: 'id', render: function (data, type, row) {
+                            return '<button type="button" class="btn btn-secondary btn-sm"\n' +
+                                `onclick="showUserModal(${data})">` + data + '</button>';
+                        }
+                    },
+                    {data: 'name'},
+                    {data: 'email'},
+                    {data: 'phone'},
+                    {data: 'position'},
+                    {data: 'position_id'},
+                    {data: 'registration_timestamp'},
+                    {
+                        data: 'photo', render: function (data, type, row) {
+                            return `<img
                                     class="fit-picture"
                                     src="${data}"
                                     alt="No image" /> `;
 
-                            }
                         }
-                    ],
-                    columnDefs: [{
-                        targets: [6],
-                        render: function (data, type, row) {
-                            return moment(data).format('YYYY/MM/DD/HH:mm:ss');
-                        }
-                    }],
-                });
-                data.users.forEach(function (value) {
-                    table.row.add(value).draw();
-                });
-                page++;
-                return table;
-            } else {
-                fetch("{{route('token')}}").then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    console.log(data);
-                    token = data.token;
-                    loadTable(data.token);
-                });
-            }
+                    }
+                ],
+                columnDefs: [{
+                    targets: [6],
+                    render: function (data, type, row) {
+                        return moment(data).format('YYYY/MM/DD/HH:mm:ss');
+                    }
+                }],
+            });
+            data.users.forEach(function (value) {
+                table.row.add(value).draw();
+            });
+            page++;
         });
     }
 
-    function showMoreUsers(token) {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/json'
-            }
-        }
-        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
-            return response.json();
-        }).then(function (data) {
-            if (data.success) {
-                console.log(data);
-                data.users.forEach(function (value) {
-                    $('#myTable').DataTable().row.add(value).draw();
-                });
-                page++;
-            } else {
-                fetch("{{route('token')}}").then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    console.log(data);
-                    token = data.token;
-                    showMoreUsers(data.token);
-                });
-            }
-        });
-    }
-
-    function getPositions(token) {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/json'
-            }
-        }
-
-        fetch("{{route('positions')}}", config).then(function (response) {
-
+    function showMoreUsers() {
+        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+            console.log(response);
             return response.json();
         }).then(function (data) {
             console.log(data);
-            if (data.success) {
-                data.positions.forEach(function (value) {
-                    $('#positionSelect').append($('<option></option>').text(value.name).attr('value', value.id));
-                });
-            } else {
-                alert(data.message + " You have to reload the page to work with a new token.");
-            }
+            data.users.forEach(function (value) {
+                $('#myTable').DataTable().row.add(value).draw();
+            });
+            page++;
+        });
+    }
+
+    function getPositions() {
+        fetch("{{route('positions')}}").then(function (response) {
+            console.log(response);
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            data.positions.forEach(function (value) {
+                $('#positionSelect').append($('<option></option>').text(value.name).attr('value', value.id));
+            });
         });
     }
 
@@ -324,13 +268,14 @@
             body: formData
         }
         fetch("{{route('users.register')}}", config).then(function (response) {
+            console.log(response);
             return response.json();
         }).then(function (data) {
             console.log(data);
-            if (data.success) {
-                alert(data.message);
+            if(data.message === 'The token expired.'){
+                alert(data.message + " You have to reload the page to start using new token");
             } else {
-                alert(data.message + " You have to reload the page to work with a new token.");
+                alert(data.message);
             }
         });
     }
