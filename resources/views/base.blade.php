@@ -37,7 +37,7 @@
     <thead>
     <tr>
         <th scope="col">
-            <button type="button" id="newCategoryButton" class="btn btn-secondary btn-sm">Register</button>
+            <button type="button" id="registerButton" class="btn btn-secondary btn-sm">Register</button>
         </th>
         <th scope="col">Name</th>
         <th scope="col">E-mail</th>
@@ -84,14 +84,20 @@
                 <input id="inputRegisterUserEmail" name="email" type="text"/><br/>
                 <label for="inputRegisterUserPhone">Phone:</label>
                 <input id="inputRegisterUserPhone" name="phone" type="text"/><br/>
-                <label for="inputRegisterUserPositionId">Position_id:</label>
-                <input id="inputRegisterUserPositionId" name="position_id" type="text"/><br/>
+                {{--                <label for="inputRegisterUserPositionId">Position_id:</label>--}}
+                {{--                <input id="inputRegisterUserPositionId" name="position_id" type="text"/><br/>--}}
                 <label for="inputRegisterUserPhoto">Photo:</label>
                 <input id="inputRegisterUserPhoto" name="photo" type="file"/><br/>
+                <label for="positionSelect">Position:
+                    <select id="positionSelect"></select>
+                </label>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" id="saveChangesRegisterUserButton" class="btn btn-primary btn-sm">Save changes
+                <button id="closeRegisterUserButton" type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">Close
+                </button>
+                {{--                <button id="button11" type="button" class="btn btn-secondary btn-sm">11</button>--}}
+                <button id="saveChangesRegisterUserButton" type="button" class="btn btn-primary btn-sm">Save changes
                 </button>
             </div>
         </div>
@@ -129,23 +135,24 @@
     let token;
     let page = 1;
 
-    function showCreateModal() {
+    function showRegisterModal() {
         $("#registerUserModal").modal();
+        getPositions(token);
     }
 
-    function showEditModal(categoryId) {
-        let url = '{{route('users.show', '')}}' + '/' + categoryId;
-        $('#deleteCategoryButton').val(categoryId);
-        $.ajax({
-            method: "get",
-            url: url,
-            success: function (response) {
-                $("#inputEditCategoryId").text(response.id).val(response.id);
-                $("#inputEditCategoryName").val(response.name);
-                $("#editModal").modal();
-            }
-        });
-    }
+    {{--function showEditModal(categoryId) {--}}
+    {{--    let url = '{{route('users.show', '')}}' + '/' + categoryId;--}}
+    {{--    $('#deleteCategoryButton').val(categoryId);--}}
+    {{--    $.ajax({--}}
+    {{--        method: "get",--}}
+    {{--        url: url,--}}
+    {{--        success: function (response) {--}}
+    {{--            $("#inputEditCategoryId").text(response.id).val(response.id);--}}
+    {{--            $("#inputEditCategoryName").val(response.name);--}}
+    {{--            $("#editModal").modal();--}}
+    {{--        }--}}
+    {{--    });--}}
+    {{--}--}}
 
     // $(document).ready(function () {
     getToken(function (result) {
@@ -161,8 +168,8 @@
     // });
 
 
-    $('#newCategoryButton').click(function () {
-        showCreateModal();
+    $('#registerButton').click(function () {
+        showRegisterModal();
     });
 
     $('#showMoreUsersButton').click(function () {
@@ -195,10 +202,19 @@
     $('#saveChangesRegisterUserButton').click(function () {
         $("#registerUserModal").modal('hide');
         registerUser(token);
+        emptyPositionSelect();
+    });
+
+    $('#closeRegisterUserButton').click(function () {
+        emptyPositionSelect();
+    });
+
+    $('#button11').click(function () {
+        $("#positionSelect").empty();
     });
     // $('body').on('click', '#deleteCategoryButton', function () {
     // }).on('click', '#saveChangesEditCategoryButton', function () {
-    // }).on('click','#newCategoryButton', function () {
+    // }).on('click','#registerButton', function () {
     // }).on('click', '#saveChangesRegisterUserButton', function () {
     // });
     //});
@@ -226,7 +242,8 @@
                         {data: 'position'},
                         {data: 'position_id'},
                         {data: 'registration_timestamp'},
-                        {data: 'photo', render: function (data, type, row) {
+                        {
+                            data: 'photo', render: function (data, type, row) {
                                 return `<img
                                     class="fit-picture"
                                     src="${data}"
@@ -281,6 +298,36 @@
         });
     }
 
+    function getPositions(token) {
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        }
+
+        fetch("{{route('positions')}}", config).then(function (response) {
+
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+            if (data.success) {
+                data.positions.forEach(function (value) {
+                    $('#positionSelect').append($('<option></option>').text(value.name).attr('value', value.id));
+                });
+            } else {
+                fetch("{{route('token')}}").then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                    token = data.token;
+                    getPositions(data.token);
+                });
+            }
+        });
+
+    }
+
     {{--function getUsers(token) {--}}
     {{--    fetch(--}}
     {{--        "{{route('token')}}", {--}}
@@ -312,12 +359,12 @@
         });
     }
 
-    function registerUser(token){
+    function registerUser(token) {
         let formData = new FormData();
         formData.append('name', $("#inputRegisterUserName").val());
-        formData.append('email',$("#inputRegisterUserEmail").val() );
+        formData.append('email', $("#inputRegisterUserEmail").val());
         formData.append('phone', $("#inputRegisterUserPhone").val());
-        formData.append('position_id', $("#inputRegisterUserPositionId").val());
+        formData.append('position_id', $("#positionSelect").val());
         formData.append('photo', $('#inputRegisterUserPhoto')[0].files[0]);
 
         let config = {
@@ -332,7 +379,7 @@
             return response.json();
         }).then(function (data) {
             console.log(data);
-            if(data.success){
+            if (data.success) {
                 alert(data.message);
             } else {
                 alert(data.message + " You may reload the page to work with a new token.");
@@ -364,6 +411,10 @@
         {{--        alert(data.responseJSON.message);--}}
         {{--    }--}}
         {{--});--}}
+    }
+
+    function emptyPositionSelect() {
+        $("#positionSelect").empty();
     }
 
     {{--function doo(){--}}
