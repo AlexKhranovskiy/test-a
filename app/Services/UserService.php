@@ -86,7 +86,8 @@ class UserService
 
         $fileName = $photo->getClientOriginalName();
 
-        $user = User::where('phone', $phone)->orWhere('email', $email)->first();
+        $user = $this->user->where('phone', $phone)->orWhere('email', $email)->first();
+
         if (!is_null($user)) {
             return $this->responseWithError('User with this phone or email already exist', 409);
         } else {
