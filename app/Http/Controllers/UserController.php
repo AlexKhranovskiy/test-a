@@ -4,13 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UsersAllJsonResource;
-use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -21,11 +16,19 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    /** Calls service's method and gets all users.
+     * @param UserRequest $request
+     * @return JsonResponse
+     */
     public function getAll(UserRequest $request): JsonResponse
     {
         return $this->userService->getAllWithPagination($request->get('count'));
     }
 
+    /** Calls service's method and registers user.
+     * @param RegisterRequest $request
+     * @return JsonResponse
+     */
     public function register(RegisterRequest $request): JsonResponse
     {
         return $this->userService->register(
@@ -37,6 +40,10 @@ class UserController extends Controller
         );
     }
 
+    /** Calls service's method and gets user by id.
+     * @param mixed $id
+     * @return JsonResponse
+     */
     public function getById(mixed $id): JsonResponse
     {
         return $this->userService->getById($id);

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** JsonResource for handling response in case getting all users */
 class UsersAllJsonResource extends JsonResource
 {
     /**

@@ -11,6 +11,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class RegisterRequest extends FormRequest
 {
     use ResponseTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,26 +30,34 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:60',
             'email' => 'required|string|min:2|max:100|email:rfc',
-            'phone' => 'required|string|', //string - pattern: ^[\+]{0,1}380([0-9]{9})$)
+            'phone' => 'required|string|regex:/^[\+]380([0-9]{9})$/',
             'position_id' => 'required|integer|min:1',
             'photo' => 'required|file'
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    /** Handles in case failed validation.
+     * @param Validator $validator
+     * @return mixed
+     */
+    protected function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(
             $this->validationErrorResponse($validator)
         );
     }
 
+    /** Validates file.
+     * @param $validator
+     * @return void
+     */
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
             $file = $this->file('photo');
             if ($file?->getSize() === 0) {
                 $validator->errors()->add('photo', 'Image is invalid.');
-            } elseif($file?->getSize() > 5 * 1024 * 1024){
+            } elseif ($file?->getSize() > 5 * 1024 * 1024) {
                 $validator->errors()->add('photo', 'The photo size must not be greater than 5 Mbytes.');
             }
         });

@@ -3,22 +3,27 @@
 namespace App\Services;
 
 use App\Models\AuthenticatorUser;
+use App\Traits\ResponseTrait;
 use Exception;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class AuthService
 {
+    use ResponseTrait;
+
     /** Gets the token.
-     * @return string
      */
-    public function getToken(): string
+    public function getToken(): JsonResponse
     {
         $authenticatorUser = AuthenticatorUser::first();
         $token = auth()->attempt([
             'name' => $authenticatorUser->name,
             'password' => env('AUTHENTICATOR_USER_PASSWORD', 'qwerty')
         ]);
-        return $token;
+
+        return $this->responseWithSuccess([
+            'token' => $token
+        ]);
     }
 
     /** Resets current token.

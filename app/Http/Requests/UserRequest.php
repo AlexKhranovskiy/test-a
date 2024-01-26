@@ -32,7 +32,11 @@ class UserRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
+    /** Handles in case failed validation.
+     * @param Validator $validator
+     * @return mixed
+     */
+    protected function failedValidation(Validator $validator): mixed
     {
         throw new HttpResponseException(
             $this->validationErrorResponse($validator)

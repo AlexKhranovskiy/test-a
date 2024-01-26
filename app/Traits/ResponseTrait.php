@@ -7,7 +7,11 @@ use Illuminate\Http\JsonResponse;
 
 trait ResponseTrait
 {
-    public function responseWithSuccess(array $data)
+    /** Handles success response.
+     * @param array $data
+     * @return JsonResponse
+     */
+    public function responseWithSuccess(array $data): JsonResponse
     {
         $result = [
             'success' => true,
@@ -16,7 +20,13 @@ trait ResponseTrait
         return response()->json(array_merge($result, $data));
     }
 
-    public function responseWithError(string $message, int $code, ?array $data = null)
+    /** Handles error response.
+     * @param string $message
+     * @param int $code
+     * @param array|null $data
+     * @return JsonResponse
+     */
+    public function responseWithError(string $message, int $code, ?array $data = null): JsonResponse
     {
         $result = [
             'success' => false,
@@ -30,6 +40,12 @@ trait ResponseTrait
         return response()->json($result, $code);
     }
 
+    /** Handles response for validation.
+     * @param Validator $validator
+     * @param string $message
+     * @param int $code
+     * @return JsonResponse
+     */
     public function validationErrorResponse(
         Validator $validator, string $message = 'Validation failed', int $code = 422): JsonResponse
     {
