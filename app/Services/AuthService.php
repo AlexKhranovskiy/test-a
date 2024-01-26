@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
+    /** Gets the token.
+     * @return string
+     */
     public function getToken(): string
     {
         $authenticatorUser = AuthenticatorUser::first();
@@ -18,11 +21,13 @@ class AuthService
         return $token;
     }
 
-    public function resetCurrentToken()
+    /** Resets current token.
+     * @return void
+     */
+    public function resetCurrentToken(): void
     {
         try {
             auth()->logout();
-            //Auth::invalidate();
         } catch (Exception $e){}
     }
 }
