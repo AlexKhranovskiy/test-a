@@ -33,6 +33,10 @@ class UserService
         $this->authService = $authService;
     }
 
+    /** Gets all users, paginates, sorts registration_timestamp by desc.
+     * @param int|null $count
+     * @return JsonResponse
+     */
     public function getAllWithPagination(?int $count): JsonResponse
     {
         if (is_null($count)) {
@@ -66,7 +70,15 @@ class UserService
         ]);
     }
 
-    public function register(string $name, string $email, string $phone, string $positionId, UploadedFile $photo)
+    /** Registers a new user, handles photo.
+     * @param string $name
+     * @param string $email
+     * @param string $phone
+     * @param string $positionId
+     * @param UploadedFile $photo
+     * @return JsonResponse
+     */
+    public function register(string $name, string $email, string $phone, string $positionId, UploadedFile $photo): JsonResponse
     {
         if (!Storage::disk('public_uploads')->put('images/users', $photo)) {
             return $this->responseWithError('Error file uploading. File have not been saved', 500);
@@ -109,6 +121,10 @@ class UserService
         }
     }
 
+    /** Gets a user by given id.
+     * @param mixed $id
+     * @return JsonResponse
+     */
     public function getById(mixed $id): JsonResponse
     {
         $validator = Validator::make(['user_id' => $id], [

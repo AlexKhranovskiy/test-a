@@ -28,10 +28,5 @@ Route::prefix('v1')->group(
         Route::get('/users/{id}', [UserController::class, 'getById'])->name('users.show');
         Route::post('/users', [UserController::class, 'register'])->name('users.register')
             ->middleware('auth.jwt');
-//Route::post('/users', function(Request $request){
-//    file_put_contents(__DIR__. '/2.txt', print_r($request->all(), 1));
-//})->name('users.register');
-
         Route::get('/positions', [PositionController::class, 'getAll'])->name('positions');
-        Route::post('/reset', [AuthController::class, 'reset']);
     });

@@ -23,10 +23,4 @@ class AuthController extends Controller
             'token' => $authService->getToken()
         ]);
     }
-
-//    public function reset(AuthService $authService)
-//    {
-//        $authService->resetCurrentToken();
-//        return $this->responseWithSuccess(['message' => 'Token has been reset']);
-//    }
 }
