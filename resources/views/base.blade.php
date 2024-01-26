@@ -132,7 +132,12 @@
     }
 
     function showUserModal(userId) {
-        fetch('{{route('users.show', '')}}' + '/' + userId).then(function (response) {
+        let config = {
+            headers: {
+                'Accept': 'application/json'
+            }
+        }
+        fetch('{{route('users.show', '')}}' + '/' + userId, config).then(function (response) {
             console.log(response);
             return response.json();
         }).then(function (data) {
@@ -153,7 +158,9 @@
         token = result;
     });
 
-    loadTable();
+    $(document).ready(function() {
+        loadTable();
+    });
 
     $('#registerButton').click(function () {
         showRegisterModal();
@@ -174,13 +181,19 @@
     });
 
     function loadTable() {
-        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+        let config = {
+            headers: {
+                'Accept': 'application/json'
+            }
+        }
+        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
             console.log(response)
             return response.json();
         }).then(function (data) {
             console.log(data);
             let table = $('#myTable').DataTable({
                 stateSave: true,
+                "aaSorting": [[6, 'desc']],
                 columns: [
                     {
                         data: 'id', render: function (data, type, row) {
@@ -219,7 +232,12 @@
     }
 
     function showMoreUsers() {
-        fetch("{{route('users.all')}}" + "?page=" + page).then(function (response) {
+        let config = {
+            headers: {
+                'Accept': 'application/json'
+            }
+        }
+        fetch("{{route('users.all')}}" + "?page=" + page, config).then(function (response) {
             console.log(response);
             return response.json();
         }).then(function (data) {
@@ -236,7 +254,12 @@
     }
 
     function getPositions() {
-        fetch("{{route('positions')}}").then(function (response) {
+        let config = {
+            headers: {
+                'Accept': 'application/json'
+            }
+        }
+        fetch("{{route('positions')}}", config).then(function (response) {
             console.log(response);
             return response.json();
         }).then(function (data) {
@@ -248,7 +271,12 @@
     }
 
     function getToken(callback) {
-        fetch("{{route('token')}}").then(function (response) {
+        let config = {
+            headers: {
+                'Accept': 'application/json'
+            }
+        }
+        fetch("{{route('token')}}", config).then(function (response) {
             return response.json();
         }).then(function (data) {
             callback(data.token);
@@ -279,7 +307,17 @@
             if(data.message === 'The token expired.'){
                 alert(data.message + " You have to reload the page to start using new token");
             } else {
-                alert(data.message);
+                if(data.message === 'Validation failed'){
+                    let errors = '';
+                    for (var i in data.fails) {
+                        if (data.fails.hasOwnProperty(i)) {
+                            errors += data.fails[i] + "\n";
+                        }
+                    }
+                alert(data.message + "\n\n" + errors);
+                } else {
+                    alert(data.message);
+                }
             }
         });
     }
