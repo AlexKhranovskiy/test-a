@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Traits\LoggerTrait;
-
 /** Service for handling file uploaded file */
 class FileService
 {
