@@ -10,6 +10,9 @@ class PositionService
 {
     use ResponseTrait;
 
+    /** Gets all positions.
+     * @return JsonResponse
+     */
     public function getAll(): JsonResponse
     {
         $positions = Position::all(['id', 'name']);
