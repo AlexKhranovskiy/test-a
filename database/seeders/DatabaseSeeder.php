@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         AuthenticatorUser::factory(1)->create();
-        $users = User::factory(2)->create();
+        $users = User::factory(45)->create();
         $positions = Position::factory(5)->create();
 
 
