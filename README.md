@@ -17,7 +17,7 @@ with inputted email or phone has already registered.
 
 ### How to run:
 * Clone the repository ```https://github.com/AlexKhranovskiy/test-a```
-* Copy content from .env.example file to .env file
+* Create in root folder file .env, copy content from .env.example file to .env file
 * Run ```docker-compose up -d```
 * Go inside the container ```docker exec -it test-a_php-apache_1 bash```
 * Run ```composer install```

@@ -80,11 +80,11 @@ class UserService
      */
     public function register(string $name, string $email, string $phone, string $positionId, UploadedFile $photo): JsonResponse
     {
-        if (!Storage::disk('public_uploads')->put('images/users', $photo)) {
+        $fileName = Storage::disk('public_uploads')->put('images/users', $photo);
+
+        if (!$fileName) {
             return $this->responseWithError('Error file uploading. File have not been saved', 500);
         }
-
-        $fileName = $photo->getClientOriginalName();
 
         $user = $this->user->where('phone', $phone)->orWhere('email', $email)->first();
 

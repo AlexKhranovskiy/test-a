@@ -17,13 +17,15 @@ class FileService
         $this->directory = $directory;
     }
 
-    /** Sets file name.
+    /** Takes file name from file path and sets to object field.
      * @param string $fileName
      * @return void
      */
     public function setFileName(string $fileName): void
     {
-        $this->fileName = $fileName;
+        $fileNameItems = explode('/', $fileName);
+        end($fileNameItems);
+        $this->fileName = current($fileNameItems);
     }
 
     /** Gets directory of file.
