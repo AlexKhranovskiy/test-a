@@ -24,9 +24,10 @@ with inputted email or phone has already registered.
 * Run ```php artisan optimize:clear```
 * Run ```php artisan migrate```
 * Run ```php artisan db:seed```
-* To exit, run ```make down```
-
-Local web is available here: [http://localhost:8080](http://localhost:8080)
+* Run ```chmod 777 -R /var/www/html/storage```
+* Run ```chmod 777 -R /var/www/html/public```
+* Open [http://localhost](http://localhost)
+* To exit, press ctrl+D and run ```docker-compose down```
 
 
 
