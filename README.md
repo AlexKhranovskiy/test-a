@@ -16,7 +16,15 @@ with inputted email or phone has already registered.
 * Additional libraries: tymon/jwt-auth, tinify/tinify, DataTables 
 
 ### How to run:
+* Clone the repository ```https://github.com/AlexKhranovskiy/test-a```
+* Copy content from .env.example file to .env file
+* Run ```docker-compose up -d```
+* Run ```composer install```
+* Run ```php artisan optimize```
+* Run ```php artisan config:clear```
+* To exit, run ```make down```
 
+Local web is available here: [http://localhost:8080](http://localhost:8080)
 
 
 
