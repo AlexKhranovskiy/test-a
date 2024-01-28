@@ -19,9 +19,11 @@ with inputted email or phone has already registered.
 * Clone the repository ```https://github.com/AlexKhranovskiy/test-a```
 * Copy content from .env.example file to .env file
 * Run ```docker-compose up -d```
+* Go inside the container ```docker exec -it test-a_php-apache_1 bash```
 * Run ```composer install```
-* Run ```php artisan optimize```
-* Run ```php artisan config:clear```
+* Run ```php artisan optimize:clear```
+* Run ```php artisan migrate```
+* Run ```php artisan db:seed```
 * To exit, run ```make down```
 
 Local web is available here: [http://localhost:8080](http://localhost:8080)
